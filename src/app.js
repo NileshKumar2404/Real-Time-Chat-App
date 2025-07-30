@@ -19,7 +19,9 @@ app.use((req, res, next) => {
 })
 
 import userRouter from "./routes/user.routes.js"
+import chatRoomRouter from "./routes/chatRoom.routes.js"
 
 app.use("/api/v1/user", userRouter)
+app.use("/api/v1/chatRoom", chatRoomRouter)
 
 export {app}
