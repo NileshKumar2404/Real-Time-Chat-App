@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js"
-import { accessChat, getUserChats } from "../controllers/chatRoom.controller";
+import { accessChat, getUserChats } from "../controllers/chatRoom.controller.js";
 
 const router = Router()
 
