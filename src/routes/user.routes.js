@@ -18,6 +18,6 @@ router.route("/login-user").post(loginUser)
 router.route("/log-out").post(verifyJWT, logoutUser)
 router.route("/change-pass").post(verifyJWT, changePassword)
 router.route("/online-status/:userId").post(verifyJWT, updateOnlineStatus)
-router.route("/update-lastSeen").post(verifyJWT, updateLastSeen)
+router.route("/update-lastSeen/:userId").post(verifyJWT, updateLastSeen)
 
 export default router

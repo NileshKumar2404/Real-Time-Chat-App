@@ -11,7 +11,6 @@ const chatRoomSchema = new mongoose.Schema({
     },
     groupName: {
         type: String,
-        required: true
     }
 },{timestamps: true})
 

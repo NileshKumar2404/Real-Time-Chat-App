@@ -13,10 +13,10 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(express.static('public'))
 app.use((req, res, next) => {
-    console.log("Received ${req.method} request with body:", req.body);
-    console.log("Received ${req.method} request with params:", req.params);
-    next();
+    console.log(`request body: ${req.body}`);
+    next()
 })
+
 
 import userRouter from "./routes/user.routes.js"
 import chatRoomRouter from "./routes/chatRoom.routes.js"
