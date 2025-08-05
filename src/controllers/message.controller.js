@@ -4,6 +4,7 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import {Message} from "../models/message.models.js"
 import {User} from "../models/user.models.js"
 import {ChatRoom} from "../models/chatRoom.models.js"
+import mongoose from "mongoose"
 
 const sendMessage = asyncHandler(async (req, res) => {
     try {
@@ -50,7 +51,7 @@ const getAllMessagesForChat = asyncHandler(async (req, res) => {
     const chats = await Message.aggregate([
         {
             $match: {
-                chatRoom: chatRoomId
+                chatRoom: new mongoose.Types.ObjectId(chatRoomId)
             }
         },
         {
@@ -103,7 +104,7 @@ const getAllMessagesForChat = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(
         201,
-        {chats},
+        chats,
         "Chats fetched successfully."
     ))
 })

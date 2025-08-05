@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js"
 import { upload } from "../middlewares/multer.middleware.js"
-import { changePassword, loginUser, logoutUser, registerUser, updateLastSeen, updateOnlineStatus } from "../controllers/user.controller.js";
+import { changePassword, loginUser, logoutUser, registerUser, socialLogin, updateLastSeen, updateOnlineStatus } from "../controllers/user.controller.js";
 
 const router = Router()
 
+router.route("/social-login").post(socialLogin)
 router.route("/register-user").post(
     upload.fields([
         {

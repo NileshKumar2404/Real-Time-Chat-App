@@ -19,6 +19,49 @@ const generateAccessTokenAndRefreshToken = async(userId) => {
     }
 }
 
+const socialLogin = asyncHandler(async (req, res) => {
+    try {
+        const {name, email, profilePic} = req.body
+
+        if(!name || !email || !profilePic) {
+            throw new ApiError(401, "All fields are required");
+        }
+
+        let user = await User.findOne({email})
+
+        if(!user) {
+            user = await User.create({
+                name, 
+                email,
+                profilePic,
+                password: "#"
+            })
+        }
+
+        const { accessToken, refreshToken } = await generateAccessTokenAndRefreshToken(user._id)
+
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+
+        const sanitizedUser = await User.findById(user._id).select("-password -refreshToken")
+
+        return res
+        .status(201)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(new ApiResponse(
+            200,
+            {sanitizedUser, accessToken, refreshToken},
+            "Social login successfully"
+        ))
+    } catch (error) {
+        console.error("Social login error:", error);
+        return res.status(500).json(new ApiResponse(500, {}, "Internal server error"));
+    }
+})
+
 const registerUser = asyncHandler(async (req, res) => {
     try {
         const {name, email, password} = req.body
@@ -201,6 +244,7 @@ const updateLastSeen = asyncHandler(async (req, res) => {
 })
 
 export {
+    socialLogin,
     registerUser,
     loginUser,
     logoutUser,
