@@ -69,7 +69,15 @@ const registerUser = asyncHandler(async (req, res) => {
         if(!name || !email || !password) throw new ApiError(401, "All fields are required");
     
         const existedUser = await User.findOne({email})
-        if(existedUser) throw new ApiError(401, "User already exists");
+        if(existedUser) {
+            return res
+            .status(401)
+            .json(new ApiResponse(
+                401, 
+                {},
+                "User already existed"
+            ))
+        }
     
         const profilePicLocalPath = req.files?.profilePic[0]?.path 
         if(!profilePicLocalPath) throw new ApiError(401, "profile pic is required");
@@ -77,7 +85,15 @@ const registerUser = asyncHandler(async (req, res) => {
         const profilePic = await uploadOnCloudinary(profilePicLocalPath)
         console.log(profilePic.url);
         
-        if(!profilePic) throw new ApiError(401, "Error in uploading an pic on cloudinary");
+        if(!profilePic) {
+            return res
+            .status(401)
+            .json(new ApiResponse(
+                401, 
+                {},
+                "Error in uploading the profile pic on cloud."
+            ))
+        }
     
         const user = await User.create({
             name,
@@ -118,10 +134,26 @@ const loginUser = asyncHandler(async (req, res) => {
         if(!email || !password) throw new ApiError(401, "All fields are required");
     
         const user = await User.findOne({email})
-        if(!user) throw new ApiError(401, 'User not found');
+        if(!user) {
+            return res
+            .status(401)
+            .json(new ApiResponse(
+                401, 
+                {},
+                "User not found"
+            ))
+        }
     
         const isPasswordValid = await user.isPasswordCorrect(password)
-        if(!isPasswordValid) throw new ApiError(401, "Password is incorrect");
+        if(!isPasswordValid) {
+            return res
+            .status(401)
+            .json(new ApiResponse(
+                401, 
+                {},
+                "Password incorrect"
+            ))
+        }
     
         const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
     
